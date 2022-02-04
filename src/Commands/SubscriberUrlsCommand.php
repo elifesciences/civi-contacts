@@ -19,7 +19,9 @@ final class SubscriberUrlsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'subscriber:urls';
+    protected $signature = 'subscriber:urls {--total= : Total (default: 500, set to 0 to retrieve all subscribers)}
+                    {--batch-size= : Handle queries in batches of (max: 100, default: 100)}
+                    {--offset= : Query offset (default: 0)}';
 
     /**
      * The description of the command.
@@ -45,19 +47,23 @@ final class SubscriberUrlsCommand extends Command
         $this->info('Finding civi contacts without preference and unsubscribe urls.');
 
         $subscribers = $this->civiCrmClient->getAllSubscribers(
-            env('CIVI_QUERY_CEILING', 500),
-            env('CIVI_QUERY_LIMIT', 100)
+            $this->option('total') ?? 500,
+            $this->option('batch-size') ?? 100,
+            $this->option('offset') ?? 0
         );
 
         $this->info(count($subscribers).' subscribers found.');
         $this->info('Updating contacts with preference urls and unsubscribe urls.');
 
+        $co = 0;
+        $total = count($subscribers);
         /** @var Subscriber $subscriber */
         foreach ($subscribers as $subscriber) {
+            $co++;
             $subscriber->prepareUrls();
             /** @var Subscriber $store */
             $store = $this->civiCrmClient->storeSubscriberUrls($subscriber)->wait();
-            $this->info('Updating contact '.$store->getId().'.');
+            $this->info('Updating contact '.$store->getId().'. ('.$co.' of '.$total.')');
         }
     }
 

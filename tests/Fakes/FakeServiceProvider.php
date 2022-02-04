@@ -27,12 +27,13 @@ final class FakeServiceProvider extends AppServiceProvider
                         return Create::promiseFor($subscriber);
                     }
 
-                    public function getAllSubscribers(int $ceiling = 0, int $limit = 100, int $offset = 0) : array
+                    public function getAllSubscribers(int $total = 0, int $batchSize = 100, int $offset = 0) : array
                     {
                         return [
                             1 => new Subscriber(1, 'http://localhost/content-alerts/foo'),
                             2 => new Subscriber(2, null, 'http://localhost/content-alerts/bar'),
                             3 => new Subscriber(3),
+                            $total + $batchSize + $offset => new Subscriber($total + $batchSize + $offset),
                         ];
                     }
                 };

@@ -56,17 +56,17 @@ final class CiviCrmClient implements CiviCrmClientInterface
         });
     }
 
-    public function getAllSubscribers(int $ceiling = 0, int $limit = 100, int $offset = 0) : array
+    public function getAllSubscribers(int $total = 0, int $batchSize = 100, int $offset = 0) : array
     {
         $allSubscribers = [];
-        while ((0 === $ceiling || ($limit + $offset) <= $ceiling)) {
+        while ((0 === $total || ($batchSize + $offset) <= $total)) {
             try {
-                $subscribers = $this->getSubscribers($limit, $offset)->wait();
+                $subscribers = $this->getSubscribers($batchSize, $offset)->wait();
             } catch (RequestException $exception) {
                 throw new Exception(implode(',', $allSubscribers), 0, $exception);
             }
 
-            $offset += $limit;
+            $offset += $batchSize;
             $allSubscribers = $subscribers + $allSubscribers;
         }
 
