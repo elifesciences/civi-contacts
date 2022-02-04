@@ -45,5 +45,3 @@ jobs:
       - name: Run tests
         run: |
           ./project_tests.sh
-        with:
-          php-version: ${{ matrix.php-versions }}
