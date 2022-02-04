@@ -39,7 +39,11 @@ jobs:
 
       - name: Install dependencies
         uses: php-actions/composer@v6
+        with:
+          php-version: ${{ matrix.php-versions }}
 
       - name: Run tests
         run: |
           ./project_tests.sh
+        with:
+          php-version: ${{ matrix.php-versions }}
