@@ -10,22 +10,22 @@ on:
 
 jobs:
   run:
-    name: Run
     runs-on: ${{ matrix.operating-system }}
     strategy:
-      fail-fast: false
       matrix:
-        operating-system: [ubuntu-20.04, ubuntu-18.04]
-        php-versions: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
+        operating-system: [ubuntu-latest, windows-latest, macos-latest]
+        php-versions: ['7.2', '7.3', '7.4']
+    name: PHP ${{ matrix.php-versions }} Test on ${{ matrix.operating-system }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup PHP with extensions and custom config
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
-        env:
+        with:
           php-version: ${{ matrix.php-versions }}
-          ini-values: post_max_size=256M, short_open_tag=On, date.timezone=Asia/Kolkata
+          extensions: mbstring, intl
+          ini-values: post_max_size=256M, short_open_tag=On
 
       - name: Testing PHP version
         run: |
