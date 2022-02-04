@@ -120,6 +120,8 @@ final class CiviCrmClientTest extends TestCase
             'api_key' => 'api-key',
             'key' => 'site-key',
         ]), $firstRequest->getUri()->getQuery());
+
+        $this->markTestSkipped('Skip for now');
     }
 
     /**
