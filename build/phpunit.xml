@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Tests" tests="2" assertions="10" errors="0" warnings="0" failures="0" skipped="0" time="0.091685">
+    <testsuite name="tests\eLife\CiviContacts\Commands\SubscriberUrlsCommandTest" file="/Users/nathanlisgo/elife/civi-contacts/tests/Commands/SubscriberUrlsCommandTest.php" tests="1" assertions="7" errors="0" warnings="0" failures="0" skipped="0" time="0.073851">
+      <testcase name="it_will_run_the_subscribers_urls_command" class="tests\eLife\CiviContacts\Commands\SubscriberUrlsCommandTest" classname="tests.eLife.CiviContacts.Commands.SubscriberUrlsCommandTest" file="/Users/nathanlisgo/elife/civi-contacts/tests/Commands/SubscriberUrlsCommandTest.php" line="12" assertions="7" time="0.073851"/>
+    </testsuite>
+    <testsuite name="tests\eLife\CiviContacts\Guzzle\CiviCrmClientTest" file="/Users/nathanlisgo/elife/civi-contacts/tests/Guzzle/CiviCrmClientTest.php" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.017834">
+      <testcase name="it_will_store_subscriber_urls" class="tests\eLife\CiviContacts\Guzzle\CiviCrmClientTest" classname="tests.eLife.CiviContacts.Guzzle.CiviCrmClientTest" file="/Users/nathanlisgo/elife/civi-contacts/tests/Guzzle/CiviCrmClientTest.php" line="20" assertions="3" time="0.017834"/>
+    </testsuite>
+  </testsuite>
+</testsuites>
