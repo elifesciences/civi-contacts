@@ -2,10 +2,6 @@
 
 namespace tests\eLife\CiviContacts\Commands;
 
-use eLife\CiviContacts\Guzzle\CiviCrmClientInterface;
-use eLife\CiviContacts\Model\Subscriber;
-use GuzzleHttp\Promise\Create;
-use GuzzleHttp\Promise\PromiseInterface;
 use tests\eLife\CiviContacts\TestCase;
 
 final class SubscriberUrlsCommandTest extends TestCase
