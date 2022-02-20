@@ -71,16 +71,25 @@ final class CiviCrmClientTest extends TestCase
                         'id' => 1,
                         'custom_131' => 'http://localhost/content-alerts/foo',
                         'custom_132' => '',
+                        'custom_136' => '',
                     ],
                     [
                         'id' => 2,
                         'custom_131' => '',
                         'custom_132' => 'http://localhost/content-alerts/unsubscribe/bar',
+                        'custom_136' => '',
                     ],
                     [
                         'id' => 3,
                         'custom_131' => '',
                         'custom_132' => '',
+                        'custom_136' => 'http://localhost/content-alerts/unsubscribe/baz',
+                    ],
+                    [
+                        'id' => 4,
+                        'custom_131' => '',
+                        'custom_132' => '',
+                        'custom_136' => '',
                     ],
                 ],
             ])),
@@ -91,7 +100,8 @@ final class CiviCrmClientTest extends TestCase
         $this->assertEquals([
             new Subscriber(1, 'http://localhost/content-alerts/foo'),
             new Subscriber(2, '', 'http://localhost/content-alerts/unsubscribe/bar'),
-            new Subscriber(3),
+            new Subscriber(3, '', '', 'http://localhost/content-alerts/unsubscribe/baz'),
+            new Subscriber(4),
         ], $subscribers);
         $this->assertCount(1, $container);
 

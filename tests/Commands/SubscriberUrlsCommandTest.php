@@ -17,12 +17,13 @@ final class SubscriberUrlsCommandTest extends TestCase
             '--offset' => 3,
         ])
             ->expectsOutput('Finding civi contacts without preference and unsubscribe urls.')
-            ->expectsOutput('4 subscribers found.')
+            ->expectsOutput('5 subscribers found.')
             ->expectsOutput('Updating contacts with preference urls and unsubscribe urls.')
-            ->expectsOutput('Updating contact 1. (1 of 4)')
-            ->expectsOutput('Updating contact 2. (2 of 4)')
-            ->expectsOutput('Updating contact 3. (3 of 4)')
-            ->expectsOutput('Updating contact 123. (4 of 4)')
+            ->expectsOutput('Updating contact 1. (1 of 5)')
+            ->expectsOutput('Updating contact 2. (2 of 5)')
+            ->expectsOutput('Updating contact 3. (3 of 5)')
+            ->expectsOutput('Updating contact 4. (4 of 5)')
+            ->expectsOutput('Updating contact 123. (5 of 5)')
             ->assertExitCode(0);
     }
 }
