@@ -32,11 +32,12 @@ final class CiviCrmClientTest extends TestCase
             new Subscriber(
                 1,
                 'http://localhost/content-alerts/foo',
-                'http://localhost/content-alerts/unsubscribe/bar'
+                'http://localhost/content-alerts/unsubscribe/bar',
+                'http://localhost/content-alerts/optout/baz'
             )
         );
 
-        $this->assertEquals(new Subscriber(1, 'http://localhost/content-alerts/foo', 'http://localhost/content-alerts/unsubscribe/bar'), $store->wait());
+        $this->assertEquals(new Subscriber(1, 'http://localhost/content-alerts/foo', 'http://localhost/content-alerts/unsubscribe/bar', 'http://localhost/content-alerts/optout/baz'), $store->wait());
 
         $this->assertCount(1, $container);
 
@@ -49,6 +50,7 @@ final class CiviCrmClientTest extends TestCase
                 'contact_id' => 1,
                 'custom_131' => 'http://localhost/content-alerts/foo',
                 'custom_132' => 'http://localhost/content-alerts/unsubscribe/bar',
+                'custom_136' => 'http://localhost/content-alerts/optout/baz',
             ],
             'api_key' => 'api-key',
             'key' => 'site-key',
@@ -83,7 +85,7 @@ final class CiviCrmClientTest extends TestCase
                         'id' => 3,
                         'custom_131' => '',
                         'custom_132' => '',
-                        'custom_136' => 'http://localhost/content-alerts/unsubscribe/baz',
+                        'custom_136' => 'http://localhost/content-alerts/optout/baz',
                     ],
                     [
                         'id' => 4,
@@ -100,7 +102,7 @@ final class CiviCrmClientTest extends TestCase
         $this->assertEquals([
             new Subscriber(1, 'http://localhost/content-alerts/foo'),
             new Subscriber(2, '', 'http://localhost/content-alerts/unsubscribe/bar'),
-            new Subscriber(3, '', '', 'http://localhost/content-alerts/unsubscribe/baz'),
+            new Subscriber(3, '', '', 'http://localhost/content-alerts/optout/baz'),
             new Subscriber(4),
         ], $subscribers);
         $this->assertCount(1, $container);
