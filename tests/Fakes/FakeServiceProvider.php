@@ -31,8 +31,9 @@ final class FakeServiceProvider extends AppServiceProvider
                     {
                         return [
                             1 => new Subscriber(1, 'http://localhost/content-alerts/foo'),
-                            2 => new Subscriber(2, null, 'http://localhost/content-alerts/bar'),
-                            3 => new Subscriber(3),
+                            2 => new Subscriber(2, null, 'http://localhost/content-alerts/unsubscribe/bar'),
+                            3 => new Subscriber(3, null, null, 'http://localhost/content-alerts/optout/baz'),
+                            4 => new Subscriber(4),
                             $total + $batchSize + $offset => new Subscriber($total + $batchSize + $offset),
                         ];
                     }

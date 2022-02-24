@@ -21,6 +21,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
     const FIELD_PREFERENCES_URL = 'custom_131';
     // Custom field to store user unsubscribe link to be included in emails.
     const FIELD_UNSUBSCRIBE_URL = 'custom_132';
+    // Custom field to store user optout link to be included in emails.
+    const FIELD_OPTOUT_URL = 'custom_136';
 
     private $client;
     private $apiKey;
@@ -43,6 +45,7 @@ final class CiviCrmClient implements CiviCrmClientInterface
                     'contact_id' => $subscriber->getId(),
                     self::FIELD_PREFERENCES_URL => $subscriber->getPreferencesUrl(),
                     self::FIELD_UNSUBSCRIBE_URL => $subscriber->getUnsubscribeUrl(),
+                    self::FIELD_OPTOUT_URL => $subscriber->getOptoutUrl(),
                 ],
             ],
         ]))->then(function (Response $response) {
@@ -51,7 +54,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
             return new Subscriber(
                 (int) $data['id'],
                 $subscriber->getPreferencesUrl(),
-                $subscriber->getUnsubscribeUrl()
+                $subscriber->getUnsubscribeUrl(),
+                $subscriber->getOptoutUrl()
             );
         });
     }
@@ -84,6 +88,7 @@ final class CiviCrmClient implements CiviCrmClientInterface
                         'id',
                         self::FIELD_PREFERENCES_URL,
                         self::FIELD_UNSUBSCRIBE_URL,
+                        self::FIELD_OPTOUT_URL,
                     ],
                     'group' => [
                         self::GROUP_LATEST_ARTICLES,
@@ -91,7 +96,7 @@ final class CiviCrmClient implements CiviCrmClientInterface
                         self::GROUP_TECHNOLOGY,
                         self::GROUP_ELIFE_NEWSLETTER,
                     ],
-                    self::FIELD_UNSUBSCRIBE_URL => ['IS NULL' => 1],
+                    self::FIELD_OPTOUT_URL => ['IS NULL' => 1],
                     'is_opt_out' => 0,
                     'options' => [
                         'limit' => $limit,
@@ -106,7 +111,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
                 return new Subscriber(
                     (int) $contact['id'],
                     $contact[self::FIELD_PREFERENCES_URL],
-                    $contact[self::FIELD_UNSUBSCRIBE_URL]
+                    $contact[self::FIELD_UNSUBSCRIBE_URL],
+                    $contact[self::FIELD_OPTOUT_URL]
                 );
             }, $response['values']) ?? [];
         });

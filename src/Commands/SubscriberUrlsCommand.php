@@ -44,7 +44,7 @@ final class SubscriberUrlsCommand extends Command
      */
     public function handle()
     {
-        $this->info('Finding civi contacts without preference and unsubscribe urls.');
+        $this->info('Finding civi contacts without preference, unsubscribe and opt-out urls.');
 
         $subscribers = $this->civiCrmClient->getAllSubscribers(
             $this->option('total') ?? 500,
@@ -53,7 +53,7 @@ final class SubscriberUrlsCommand extends Command
         );
 
         $this->info(count($subscribers).' subscribers found.');
-        $this->info('Updating contacts with preference urls and unsubscribe urls.');
+        $this->info('Updating contacts with preference, unsubscribe and opt-out urls.');
 
         $co = 0;
         $total = count($subscribers);
