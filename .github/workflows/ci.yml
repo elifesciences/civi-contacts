@@ -64,4 +64,4 @@ jobs:
       - name: Check Docker build
         run: |
           docker build . -t civi-contacts:latest
-          docker run --rm -i civi-contacts:latest ./console
+          docker run --rm -i -e CIVI_SITE_KEY="" -e CIVI_API_KEY="" civi-contacts:latest ./console
