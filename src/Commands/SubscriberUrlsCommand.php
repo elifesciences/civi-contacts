@@ -2,6 +2,7 @@
 
 namespace eLife\CiviContacts\Commands;
 
+use eLife\CiviContacts\Etoc\Subscription;
 use eLife\CiviContacts\Guzzle\CiviCrmClientInterface;
 use eLife\CiviContacts\Model\Subscriber;
 use Illuminate\Console\Scheduling\Schedule;
@@ -57,11 +58,11 @@ final class SubscriberUrlsCommand extends Command
 
         $co = 0;
         $total = count($subscribers);
-        /** @var Subscriber $subscriber */
+        /** @var Subscription $subscriber */
         foreach ($subscribers as $subscriber) {
             $co++;
             $subscriber->prepareUrls();
-            /** @var Subscriber $store */
+            /** @var Subscription $store */
             $store = $this->civiCrmClient->storeSubscriberUrls($subscriber)->wait();
             $this->info('Updating contact '.$store->getId().'. ('.$co.' of '.$total.')');
         }
