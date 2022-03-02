@@ -17,8 +17,9 @@
     ],
     "require": {
         "php": "^7.1",
-        "guzzlehttp/guzzle": "^7.4",
+        "guzzlehttp/guzzle": "^6.5",
         "guzzlehttp/promises": "^1.5",
+        "guzzlehttp/psr7": "^1.6",
         "laravel-zero/framework": "^7.0"
     },
     "require-dev": {
