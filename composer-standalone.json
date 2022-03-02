@@ -1,6 +1,6 @@
 {
-    "name": "elife/civi-contacts",
-    "type": "library",
+    "name": "elife/civi-contacts-standalone",
+    "type": "project",
     "license": "MIT",
     "require": {
         "php": "^7.1",

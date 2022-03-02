@@ -41,6 +41,8 @@ jobs:
 
       - name: Install dependencies
         uses: php-actions/composer@v6
+        env:
+          COMPOSER: composer-standalone.json
         with:
           php_version: ${{ matrix.php-versions }}
 
