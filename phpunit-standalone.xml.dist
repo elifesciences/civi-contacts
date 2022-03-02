@@ -11,9 +11,6 @@
     <testsuites>
         <testsuite name="Tests">
             <directory suffix="Test.php">./tests</directory>
-            <exclude>
-                <directory>./tests/Commands</directory>
-            </exclude>
         </testsuite>
     </testsuites>
     <filter>
