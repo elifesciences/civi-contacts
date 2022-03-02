@@ -73,9 +73,9 @@ final class Subscription
             ElifeNewsletter::LABEL => new ElifeNewsletter(),
         ];
 
-        return array_map(function ($preference) use ($groups) {
+        return array_values(array_map(function ($preference) use ($groups) {
             return $groups[$preference];
-        }, array_intersect(array_keys($groups), $preferences));
+        }, array_intersect(array_keys($groups), $preferences)));
     }
 
     private function setPreferences(array $preferences)
@@ -97,7 +97,7 @@ final class Subscription
         return $this->id;
     }
 
-    public function getOptOut() : ?bool
+    public function getOptout() : ?bool
     {
         return $this->optOut ?? null;
     }
