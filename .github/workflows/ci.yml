@@ -41,9 +41,9 @@ jobs:
 
       - name: Test custom env
         env:
-          CUSTOM_ENV_1: test
+          COMPOSER: composer-standalone.json
         run: |
-          printenv CUSTOM_ENV_1
+          printenv COMPOSER
 
       - name: Install dependencies
         env:
