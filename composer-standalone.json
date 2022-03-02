@@ -5,7 +5,8 @@
     "require": {
         "php": "^7.1",
         "guzzlehttp/guzzle": "^6.5",
-        "guzzlehttp/promises": "^1.5"
+        "guzzlehttp/promises": "^1.5",
+        "laravel-zero/framework": "^5.8"
     },
     "autoload": {
         "psr-4": {

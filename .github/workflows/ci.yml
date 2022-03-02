@@ -39,12 +39,6 @@ jobs:
           composer -V
           php -r "if(strpos(@exec('composer -V'), 'Composer version') === false) {throw new Exception('Composer not found');}"
 
-      - name: Test custom env
-        env:
-          COMPOSER: composer-standalone.json
-        run: |
-          printenv COMPOSER
-
       - name: Install dependencies
         env:
           COMPOSER: composer-standalone.json
