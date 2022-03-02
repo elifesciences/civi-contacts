@@ -57,7 +57,6 @@ return [
     'hidden' => [
         NunoMaduro\LaravelConsoleSummary\SummaryCommand::class,
         Symfony\Component\Console\Command\HelpCommand::class,
-        Symfony\Component\Console\Command\DumpCompletionCommand::class,
         Illuminate\Console\Scheduling\ScheduleRunCommand::class,
         Illuminate\Console\Scheduling\ScheduleFinishCommand::class,
         Illuminate\Foundation\Console\ConsoleMakeCommand::class,
@@ -79,7 +78,6 @@ return [
         LaravelZero\Framework\Commands\BuildCommand::class,
         LaravelZero\Framework\Commands\InstallCommand::class,
         LaravelZero\Framework\Commands\RenameCommand::class,
-        LaravelZero\Framework\Commands\StubPublishCommand::class,
     ],
 
 ];
