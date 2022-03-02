@@ -10,6 +10,9 @@ on:
       - develop
       - master
 
+env:
+  COMPOSER: composer-standalone.json
+
 jobs:
   run:
     runs-on: ${{ matrix.operating-system }}
@@ -41,8 +44,6 @@ jobs:
 
       - name: Install dependencies
         uses: php-actions/composer@v6
-        env:
-          COMPOSER: composer-standalone.json
         with:
           php_version: ${{ matrix.php-versions }}
 
