@@ -23,6 +23,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
     const GROUP_JOURNAL_ETOC_SIGNUP = 'Journal_eToc_signup_1922';
     // Add the contact to the below group to trigger email with user preferences link.
     const GROUP_JOURNAL_ETOC_PREFERENCES = 'Journal_eToc_preferences_1923';
+    // Add the contact to the below group to trigger email with unsubscribe confirmation.
+    const GROUP_JOURNAL_ETOC_UNSUBSCRIBE = 'Journal_eToc_unsubscribe_2055';
     // Custom field to store user preferences link to be included in emails.
     const FIELD_PREFERENCES_URL = 'custom_131';
     // Custom field to store unsubscribe link to be included in emails.
@@ -238,6 +240,28 @@ final class CiviCrmClient implements CiviCrmClientInterface
                 'json' => [
                     'group_id' => [
                         self::GROUP_JOURNAL_ETOC_PREFERENCES,
+                    ],
+                    'contact_id' => $contactId,
+                ],
+            ],
+        ]))->then(function (Response $response) {
+            return $this->prepareResponse($response);
+        })->then(function () use ($contactId) {
+            return [
+                'contact_id' => $contactId,
+            ];
+        });
+    }
+
+    public function triggerUnsubscribeEmail(int $contactId) : PromiseInterface
+    {
+        return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
+            'query' => [
+                'entity' => 'GroupContact',
+                'action' => 'create',
+                'json' => [
+                    'group_id' => [
+                        self::GROUP_JOURNAL_ETOC_UNSUBSCRIBE,
                     ],
                     'contact_id' => $contactId,
                 ],

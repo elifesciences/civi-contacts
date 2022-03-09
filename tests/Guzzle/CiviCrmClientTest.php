@@ -550,6 +550,43 @@ final class CiviCrmClientTest extends TestCase
             'key' => 'site-key',
         ]), $secondRequest->getUri()->getQuery());
     }
+
+    /**
+     * @test
+     */
+    public function it_will_trigger_unsubscribe_confirmation_email()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode(['is_error' => 0])),
+        ], $container);
+
+        $trigger = $client->triggerUnsubscribeEmail(12345);
+
+        $this->assertSame([
+            'contact_id' => 12345,
+        ], $trigger->wait());
+
+        $this->assertCount(1, $container);
+
+        /** @var Request $firstRequest */
+        $firstRequest = $container[0]['request'];
+        $this->assertEquals('POST', $firstRequest->getMethod());
+        $this->assertSame($this->prepareQuery([
+            'entity' => 'GroupContact',
+            'action' => 'create',
+            'json' => [
+                'group_id' => [
+                    'Journal_eToc_unsubscribe_2055',
+                ],
+                'contact_id' => 12345,
+            ],
+            'api_key' => 'api-key',
+            'key' => 'site-key',
+        ]), $firstRequest->getUri()->getQuery());
+    }
+
     /**
      * @test
      */

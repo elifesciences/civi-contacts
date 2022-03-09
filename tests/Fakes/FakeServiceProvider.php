@@ -110,6 +110,13 @@ final class FakeServiceProvider extends AppServiceProvider
                     {
                         return Create::promiseFor(null);
                     }
+
+                    public function triggerUnsubscribeEmail(
+                        int $contactId
+                    ) : PromiseInterface
+                    {
+                        return Create::promiseFor(null);
+                    }
                 };
             }
         );
