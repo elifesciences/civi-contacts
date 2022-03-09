@@ -33,6 +33,8 @@ interface CiviCrmClientInterface
 
     public function triggerPreferencesEmail(int $contactId, string $preferencesUrl = null) : PromiseInterface;
 
+    public function triggerUnsubscribeEmail(int $contactId) : PromiseInterface;
+
     public function storeSubscriberUrls(Subscription $subscription) : PromiseInterface;
 
     public function getAllSubscribers(int $total = 0, int $batchSize = 100, int $offset = 0) : array;
