@@ -578,7 +578,7 @@ final class CiviCrmClientTest extends TestCase
             'action' => 'create',
             'json' => [
                 'group_id' => [
-                    'Journal_eToc_preferences_1923',
+                    'Journal_eToc_unsubscribe_2055',
                 ],
                 'contact_id' => 12345,
             ],
