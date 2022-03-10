@@ -337,6 +337,7 @@ final class CiviCrmClientTest extends TestCase
         $container = [];
 
         $client = $this->prepareClient([
+            new Response(200, [], json_encode(['id' => '12345'])),
             new Response(200, [], json_encode(['is_error' => 0])),
         ], $container);
 
@@ -346,11 +347,27 @@ final class CiviCrmClientTest extends TestCase
             'is_error' => 0
         ], $optout->wait());
 
-        $this->assertCount(1, $container);
+        $this->assertCount(2, $container);
 
         /** @var Request $firstRequest */
         $firstRequest = $container[0]['request'];
         $this->assertEquals('POST', $firstRequest->getMethod());
+        $this->assertSame($this->prepareQuery([
+            'entity' => 'GroupContact',
+            'action' => 'create',
+            'json' => [
+                'group_id' => [
+                    'Journal_eToc_opt_out_2058',
+                ],
+                'contact_id' => 12345,
+            ],
+            'api_key' => 'api-key',
+            'key' => 'site-key',
+        ]), $firstRequest->getUri()->getQuery());
+
+        /** @var Request $secondRequest */
+        $secondRequest = $container[1]['request'];
+        $this->assertEquals('POST', $secondRequest->getMethod());
         $this->assertSame($this->prepareQuery([
             'entity' => 'Contact',
             'action' => 'create',
@@ -363,7 +380,7 @@ final class CiviCrmClientTest extends TestCase
             ],
             'api_key' => 'api-key',
             'key' => 'site-key',
-        ]), $firstRequest->getUri()->getQuery());
+        ]), $secondRequest->getUri()->getQuery());
     }
 
     /**

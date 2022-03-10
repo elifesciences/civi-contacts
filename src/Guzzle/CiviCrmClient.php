@@ -25,6 +25,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
     const GROUP_JOURNAL_ETOC_PREFERENCES = 'Journal_eToc_preferences_1923';
     // Add the contact to the below group to trigger email with unsubscribe confirmation.
     const GROUP_JOURNAL_ETOC_UNSUBSCRIBE = 'Journal_eToc_unsubscribe_2055';
+    // Add the contact to the below group to trigger email with opt-out confirmation.
+    const GROUP_JOURNAL_ETOC_OPTOUT = 'Journal_eToc_opt_out_2058';
     // Custom field to store user preferences link to be included in emails.
     const FIELD_PREFERENCES_URL = 'custom_131';
     // Custom field to store unsubscribe link to be included in emails.
@@ -71,20 +73,34 @@ final class CiviCrmClient implements CiviCrmClientInterface
     {
         return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
             'query' => [
-                'entity' => 'Contact',
+                'entity' => 'GroupContact',
                 'action' => 'create',
                 'json' => [
+                    'group_id' => [
+                        self::GROUP_JOURNAL_ETOC_OPTOUT,
+                    ],
                     'contact_id' => $contactId,
-                    'is_opt_out' => 1,
-                    self::FIELD_OPTOUT_DATE => date('Y-m-d'),
-                    self::FIELD_OPTOUT_REASON => $reasons,
-                    self::FIELD_OPTOUT_REASON_OTHER => $reasonOther,
                 ],
             ],
-        ]))
-            ->then(function (Response $response) {
-                return $this->prepareResponse($response);
-            });
+        ]))->then(function (Response $response) {
+            return $this->prepareResponse($response);
+        })->then(function () use ($contactId, $reasons, $reasonOther) {
+            return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
+                'query' => [
+                    'entity' => 'Contact',
+                    'action' => 'create',
+                    'json' => [
+                        'contact_id' => $contactId,
+                        'is_opt_out' => 1,
+                        self::FIELD_OPTOUT_DATE => date('Y-m-d'),
+                        self::FIELD_OPTOUT_REASON => $reasons,
+                        self::FIELD_OPTOUT_REASON_OTHER => $reasonOther,
+                    ],
+                ],
+            ]));
+        })->then(function (Response $response) {
+            return $this->prepareResponse($response);
+        });
     }
 
     public function unsubscribe(int $contactId, array $groups) : PromiseInterface
