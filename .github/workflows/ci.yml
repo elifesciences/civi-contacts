@@ -37,7 +37,7 @@ jobs:
           COMPOSER: composer-standalone.json
         uses: php-actions/composer@v6
         with:
-          version: 2.2.x
+          version: latest
           php_version: ${{ matrix.php-versions }}
 
       - name: Run tests (standalone)
@@ -49,7 +49,7 @@ jobs:
       - name: Install dependencies (library)
         uses: php-actions/composer@v6
         with:
-          version: 2.2.x
+          version: latest
           php_version: ${{ matrix.php-versions }}
 
       - name: Run tests (library)
