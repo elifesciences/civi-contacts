@@ -38,7 +38,7 @@ final class CiviCrmClientTest extends TestCase
                     'last_name' => '',
                     'preferences' => [53,435],
                     'groups' => implode(',', [53,435]),
-                    'custom_131' => 'http://localhost/content-alerts/foo',
+                    'custom_140' => 'http://localhost/content-alerts/foo',
                 ],
             ]])),
             new Response(200, [], json_encode(['values' => []])),
@@ -71,7 +71,7 @@ final class CiviCrmClientTest extends TestCase
                     'last_name',
                     'email',
                     'is_opt_out',
-                    'custom_131',
+                    'custom_140',
                 ],
             ],
             'api_key' => 'api-key',
@@ -104,7 +104,7 @@ final class CiviCrmClientTest extends TestCase
                     'last_name' => '',
                     'preferences' => [53,435],
                     'groups' => implode(',', [53,435]),
-                    'custom_131' => 'http://localhost/content-alerts/foo',
+                    'custom_140' => 'http://localhost/content-alerts/foo',
                 ],
             ]])),
         ], $container);
@@ -129,14 +129,14 @@ final class CiviCrmClientTest extends TestCase
             'entity' => 'Contact',
             'action' => 'get',
             'json' => [
-                'custom_131' => 'http://localhost/content-alerts/foo',
+                'custom_140' => 'http://localhost/content-alerts/foo',
                 'return' => [
                     'group',
                     'first_name',
                     'last_name',
                     'email',
                     'is_opt_out',
-                    'custom_131',
+                    'custom_140',
                 ],
             ],
             'api_key' => 'api-key',
@@ -166,7 +166,7 @@ final class CiviCrmClientTest extends TestCase
                     'last_name' => '',
                     'preferences' => [53,435],
                     'groups' => implode(',', [53,435]),
-                    'custom_131' => 'http://localhost/content-alerts/foo',
+                    'custom_140' => 'http://localhost/content-alerts/foo',
                 ],
             ]])),
         ], $container);
@@ -203,7 +203,7 @@ final class CiviCrmClientTest extends TestCase
                     'last_name',
                     'email',
                     'is_opt_out',
-                    'custom_131',
+                    'custom_140',
                 ],
             ],
             'api_key' => 'api-key',
@@ -217,11 +217,11 @@ final class CiviCrmClientTest extends TestCase
 
     public function providerQueryFields() : Traversable
     {
-        yield 'null' => [null, 'custom_131'];
-        yield 'unsubscribe default' => [new LatestArticles(), 'custom_132'];
-        yield 'unsubscribe early-career' => [new EarlyCareer(), 'custom_132'];
-        yield 'unsubscribe technology' => [new Technology(), 'custom_132'];
-        yield 'unsubscribe elife-newsletter' => [new ElifeNewsletter(), 'custom_132'];
+        yield 'null' => [null, 'custom_140'];
+        yield 'unsubscribe default' => [new LatestArticles(), 'custom_138'];
+        yield 'unsubscribe early-career' => [new EarlyCareer(), 'custom_138'];
+        yield 'unsubscribe technology' => [new Technology(), 'custom_138'];
+        yield 'unsubscribe elife-newsletter' => [new ElifeNewsletter(), 'custom_138'];
         yield 'other field' => [null, 'other', 'other'];
     }
 
@@ -268,7 +268,6 @@ final class CiviCrmClientTest extends TestCase
                 'email' => 'email@example.com',
                 'first_name' => '',
                 'last_name' => '',
-                'custom_131' => 'http://localhost/content-alerts/foo',
                 'custom_140' => 'http://localhost/content-alerts/foo',
                 'is_opt_out' => 0,
             ],
@@ -440,7 +439,6 @@ final class CiviCrmClientTest extends TestCase
                 'contact_id' => '12345',
                 'first_name' => 'New',
                 'last_name' => 'Name',
-                'custom_131' => 'http://localhost/content-alerts/foo',
                 'custom_140' => 'http://localhost/content-alerts/foo',
                 'is_opt_out' => 0,
             ],
@@ -547,7 +545,6 @@ final class CiviCrmClientTest extends TestCase
             'action' => 'create',
             'json' => [
                 'contact_id' => 12345,
-                'custom_131' => 'http://localhost/content-alerts/new-preferences-url',
                 'custom_140' => 'http://localhost/content-alerts/new-preferences-url',
             ],
             'api_key' => 'api-key',
@@ -649,11 +646,8 @@ final class CiviCrmClientTest extends TestCase
             'action' => 'create',
             'json' => [
                 'contact_id' => 1,
-                'custom_131' => 'http://localhost/content-alerts/foo',
                 'custom_140' => 'http://localhost/content-alerts/foo',
-                'custom_132' => 'http://localhost/content-alerts/unsubscribe/bar',
                 'custom_138' => 'http://localhost/content-alerts/unsubscribe/bar',
-                'custom_136' => 'http://localhost/content-alerts/optout/baz',
                 'custom_139' => 'http://localhost/content-alerts/optout/baz',
             ],
             'api_key' => 'api-key',
@@ -673,38 +667,26 @@ final class CiviCrmClientTest extends TestCase
                 'values' => [
                     [
                         'id' => 1,
-                        'custom_131' => 'http://localhost/content-alerts/foo',
                         'custom_140' => 'http://localhost/content-alerts/foo',
-                        'custom_132' => '',
                         'custom_138' => '',
-                        'custom_136' => '',
                         'custom_139' => '',
                     ],
                     [
                         'id' => 2,
-                        'custom_131' => '',
                         'custom_140' => '',
-                        'custom_132' => 'http://localhost/content-alerts/unsubscribe/bar',
                         'custom_138' => 'http://localhost/content-alerts/unsubscribe/bar',
-                        'custom_136' => '',
                         'custom_139' => '',
                     ],
                     [
                         'id' => 3,
-                        'custom_131' => '',
                         'custom_140' => '',
-                        'custom_132' => '',
                         'custom_138' => '',
-                        'custom_136' => 'http://localhost/content-alerts/optout/baz',
                         'custom_139' => 'http://localhost/content-alerts/optout/baz',
                     ],
                     [
                         'id' => 4,
-                        'custom_131' => '',
                         'custom_140' => '',
-                        'custom_132' => '',
                         'custom_138' => '',
-                        'custom_136' => '',
                         'custom_139' => '',
                     ],
                 ],
@@ -729,11 +711,8 @@ final class CiviCrmClientTest extends TestCase
             'json' => [
                 'return' => [
                     'id',
-                    'custom_131',
                     'custom_140',
-                    'custom_132',
                     'custom_138',
-                    'custom_136',
                     'custom_139',
                 ],
                 'group' => [

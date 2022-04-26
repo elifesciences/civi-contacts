@@ -28,17 +28,11 @@ final class CiviCrmClient implements CiviCrmClientInterface
     // Add the contact to the below group to trigger email with opt-out confirmation.
     const GROUP_JOURNAL_ETOC_OPTOUT = 'Journal_eToc_opt_out_2058';
     // Custom field to store user preferences link to be included in emails.
-    const FIELD_PREFERENCES_URL = 'custom_131';
-    // Custom field to store user preferences link to be included in emails (raw).
-    const FIELD_PREFERENCES_URL_RAW = 'custom_140';
+    const FIELD_PREFERENCES_URL = 'custom_140';
     // Custom field to store unsubscribe link to be included in emails.
-    const FIELD_UNSUBSCRIBE_URL = 'custom_132';
-    // Custom field to store unsubscribe link to be included in emails (raw).
-    const FIELD_UNSUBSCRIBE_URL_RAW = 'custom_138';
+    const FIELD_UNSUBSCRIBE_URL = 'custom_138';
     // Custom field to store opt-out link to be included in emails.
-    const FIELD_OPTOUT_URL = 'custom_136';
-    // Custom field to store opt-out date.
-    const FIELD_OPTOUT_URL_RAW = 'custom_139';
+    const FIELD_OPTOUT_URL = 'custom_139';
     // Custom field to store opt-out date.
     const FIELD_OPTOUT_DATE = 'custom_98';
     // Custom field to store opt-out reason.
@@ -66,7 +60,6 @@ final class CiviCrmClient implements CiviCrmClientInterface
                 'json' => [
                     'contact_id' => $contactId,
                     self::FIELD_PREFERENCES_URL => $preferencesUrl,
-                    self::FIELD_PREFERENCES_URL_RAW => $preferencesUrl,
                 ],
             ],
         ]))->then(function (Response $response) {
@@ -153,20 +146,17 @@ final class CiviCrmClient implements CiviCrmClientInterface
                         'first_name' => $firstName ?? '',
                         'last_name' => $lastName ?? '',
                         self::FIELD_PREFERENCES_URL => $preferencesUrl,
-                        self::FIELD_PREFERENCES_URL_RAW => $preferencesUrl,
                         // Interpret submission as confirmation of desire to receive bulk emails.
                         'is_opt_out' => 0,
                     ] +
                     (
                         $unsubscribeUrl ? [
                             self::FIELD_UNSUBSCRIBE_URL => $unsubscribeUrl,
-                            self::FIELD_UNSUBSCRIBE_URL_RAW => $unsubscribeUrl,
                         ] : []
                     ) +
                     (
                         $optoutUrl ? [
                             self::FIELD_OPTOUT_URL => $optoutUrl,
-                            self::FIELD_OPTOUT_URL_RAW => $optoutUrl,
                         ] : []
                     ),
             ],
@@ -331,11 +321,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
                 'json' => [
                     'contact_id' => $subscription->getId(),
                     self::FIELD_PREFERENCES_URL => $subscription->getPreferencesUrl(),
-                    self::FIELD_PREFERENCES_URL_RAW => $subscription->getPreferencesUrl(),
                     self::FIELD_UNSUBSCRIBE_URL => $subscription->getUnsubscribeUrl(),
-                    self::FIELD_UNSUBSCRIBE_URL_RAW => $subscription->getUnsubscribeUrl(),
                     self::FIELD_OPTOUT_URL => $subscription->getOptoutUrl(),
-                    self::FIELD_OPTOUT_URL_RAW => $subscription->getOptoutUrl(),
                 ],
             ],
         ]))->then(function (Response $response) {
@@ -377,11 +364,8 @@ final class CiviCrmClient implements CiviCrmClientInterface
                     'return' => [
                         'id',
                         self::FIELD_PREFERENCES_URL,
-                        self::FIELD_PREFERENCES_URL_RAW,
                         self::FIELD_UNSUBSCRIBE_URL,
-                        self::FIELD_UNSUBSCRIBE_URL_RAW,
                         self::FIELD_OPTOUT_URL,
-                        self::FIELD_OPTOUT_URL_RAW,
                     ],
                     'group' => [
                         LatestArticles::GROUP,
@@ -389,7 +373,7 @@ final class CiviCrmClient implements CiviCrmClientInterface
                         Technology::GROUP,
                         ElifeNewsletter::GROUP,
                     ],
-                    self::FIELD_OPTOUT_URL_RAW => ['IS NULL' => 1],
+                    self::FIELD_OPTOUT_URL => ['IS NULL' => 1],
                     'is_opt_out' => 0,
                     'options' => [
                         'limit' => $limit,
@@ -403,9 +387,9 @@ final class CiviCrmClient implements CiviCrmClientInterface
             return array_map(function ($contact) {
                 return Subscription::urlsOnly(
                     (int) $contact['id'],
-                    $contact[self::FIELD_PREFERENCES_URL_RAW],
-                    $contact[self::FIELD_UNSUBSCRIBE_URL_RAW],
-                    $contact[self::FIELD_OPTOUT_URL_RAW]
+                    $contact[self::FIELD_PREFERENCES_URL],
+                    $contact[self::FIELD_UNSUBSCRIBE_URL],
+                    $contact[self::FIELD_OPTOUT_URL]
                 );
             }, $response['values']) ?? [];
         });
