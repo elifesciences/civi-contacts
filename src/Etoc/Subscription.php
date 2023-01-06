@@ -69,7 +69,6 @@ final class Subscription
         $groups = [
             LatestArticles::LABEL => new LatestArticles(),
             EarlyCareer::LABEL => new EarlyCareer(),
-            Technology::LABEL => new Technology(),
             ElifeNewsletter::LABEL => new ElifeNewsletter(),
         ];
 
@@ -83,7 +82,6 @@ final class Subscription
         $groups = [
             LatestArticles::GROUP_ID => new LatestArticles(),
             EarlyCareer::GROUP_ID => new EarlyCareer(),
-            Technology::GROUP_ID => new Technology(),
             ElifeNewsletter::GROUP_ID => new ElifeNewsletter(),
         ];
 

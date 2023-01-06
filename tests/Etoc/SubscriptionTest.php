@@ -7,7 +7,6 @@ use eLife\CiviContacts\Etoc\ElifeNewsletter;
 use eLife\CiviContacts\Etoc\LatestArticles;
 use eLife\CiviContacts\Etoc\Newsletter;
 use eLife\CiviContacts\Etoc\Subscription;
-use eLife\CiviContacts\Etoc\Technology;
 use PHPUnit\Framework\TestCase;
 use Traversable;
 
@@ -177,12 +176,9 @@ final class SubscriptionTest extends TestCase
         ];
         yield 'repeated' => [
             [
-                'technology',
                 'elife_newsletter',
-                'technology',
             ],
             [
-                new Technology(),
                 new ElifeNewsletter(),
             ],
         ];
@@ -190,13 +186,11 @@ final class SubscriptionTest extends TestCase
             [
                 'latest_articles',
                 'early_career',
-                'technology',
                 'elife_newsletter',
             ],
             [
                 new LatestArticles(),
                 new EarlyCareer(),
-                new Technology(),
                 new ElifeNewsletter(),
             ],
         ];

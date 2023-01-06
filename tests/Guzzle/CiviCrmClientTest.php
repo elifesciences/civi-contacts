@@ -7,7 +7,6 @@ use eLife\CiviContacts\Etoc\ElifeNewsletter;
 use eLife\CiviContacts\Etoc\LatestArticles;
 use eLife\CiviContacts\Etoc\Newsletter;
 use eLife\CiviContacts\Etoc\Subscription;
-use eLife\CiviContacts\Etoc\Technology;
 use eLife\CiviContacts\Exception\CiviCrmResponseError;
 use eLife\CiviContacts\Guzzle\CiviCrmClient;
 use GuzzleHttp\Client;
@@ -52,7 +51,7 @@ final class CiviCrmClientTest extends TestCase
             'foo@bar.com',
             '',
             '',
-            [LatestArticles::GROUP_ID, Technology::GROUP_ID],
+            [LatestArticles::GROUP_ID],
             'http://localhost/content-alerts/foo'
         ), $checkSuccess->wait());
 
@@ -117,7 +116,7 @@ final class CiviCrmClientTest extends TestCase
             'foo@bar.com',
             '',
             '',
-            [LatestArticles::GROUP_ID, Technology::GROUP_ID],
+            [LatestArticles::GROUP_ID],
             'http://localhost/content-alerts/foo'
         ), $checkSuccess->wait());
 
@@ -184,7 +183,7 @@ final class CiviCrmClientTest extends TestCase
             'foo@bar.com',
             '',
             '',
-            [LatestArticles::GROUP_ID, Technology::GROUP_ID],
+            [LatestArticles::GROUP_ID],
             'http://localhost/content-alerts/foo'
         ), $checkSuccess->wait());
 
@@ -220,7 +219,6 @@ final class CiviCrmClientTest extends TestCase
         yield 'null' => [null, 'custom_140'];
         yield 'unsubscribe default' => [new LatestArticles(), 'custom_138'];
         yield 'unsubscribe early-career' => [new EarlyCareer(), 'custom_138'];
-        yield 'unsubscribe technology' => [new Technology(), 'custom_138'];
         yield 'unsubscribe elife-newsletter' => [new ElifeNewsletter(), 'custom_138'];
         yield 'other field' => [null, 'other', 'other'];
     }
@@ -404,7 +402,6 @@ final class CiviCrmClientTest extends TestCase
             ],
             [
                 new LatestArticles('http://localhost/content-alerts/unsubscribe/foo'),
-                new Technology('http://localhost/content-alerts/unsubscribe/foo/technology'),
             ],
             'http://localhost/content-alerts/foo',
             null,
@@ -413,7 +410,7 @@ final class CiviCrmClientTest extends TestCase
             'Name',
             [
                 new LatestArticles(),
-                new Technology(),
+                new ElifeNewsletter(),
             ]
         );
 
@@ -421,7 +418,7 @@ final class CiviCrmClientTest extends TestCase
             'contact_id' => '12345',
             'groups' => [
                 'added' => ['early_career'],
-                'removed' => ['technology'],
+                'removed' => ['elife_newsletter'],
                 'unchanged' => ['latest_articles'],
             ],
         ], $subscribe->wait());
@@ -472,7 +469,7 @@ final class CiviCrmClientTest extends TestCase
             'json' => [
                 'status' => 'Removed',
                 'group_id' => [
-                    'technology_news_435',
+                    'eLife_bi_monthly_news_1032',
                 ],
                 'contact_id' => '12345',
             ],
@@ -718,7 +715,6 @@ final class CiviCrmClientTest extends TestCase
                 'group' => [
                     'All_Content_53',
                     'early_careers_news_317',
-                    'technology_news_435',
                     'eLife_bi_monthly_news_1032',
                 ],
                 'custom_139' => ['IS NULL' => 1],
