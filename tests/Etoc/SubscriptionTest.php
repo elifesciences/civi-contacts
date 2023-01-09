@@ -176,9 +176,12 @@ final class SubscriptionTest extends TestCase
         ];
         yield 'repeated' => [
             [
+                'latest_articles',
                 'elife_newsletter',
+                'latest_articles',
             ],
             [
+                new LatestArticles(),
                 new ElifeNewsletter(),
             ],
         ];
