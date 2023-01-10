@@ -7,7 +7,6 @@ use eLife\CiviContacts\Etoc\ElifeNewsletter;
 use eLife\CiviContacts\Etoc\LatestArticles;
 use eLife\CiviContacts\Etoc\Newsletter;
 use eLife\CiviContacts\Etoc\Subscription;
-use eLife\CiviContacts\Etoc\Technology;
 use eLife\CiviContacts\Exception\CiviCrmResponseError;
 use Exception;
 use GuzzleHttp\ClientInterface;
@@ -370,7 +369,6 @@ final class CiviCrmClient implements CiviCrmClientInterface
                     'group' => [
                         LatestArticles::GROUP,
                         EarlyCareer::GROUP,
-                        Technology::GROUP,
                         ElifeNewsletter::GROUP,
                     ],
                     self::FIELD_OPTOUT_URL => ['IS NULL' => 1],
