@@ -303,7 +303,7 @@ final class CiviCrmClientTest extends TestCase
             new Response(200, [], json_encode(['is_error' => 0])),
         ], $container);
 
-        $unsubscribe = $client->unsubscribe('12345', ['early_careers_news_317']);
+        $unsubscribe = $client->unsubscribe('12345', ['Early_Careers_Scientists_134']);
 
         $this->assertEquals([
             'is_error' => 0
@@ -319,7 +319,7 @@ final class CiviCrmClientTest extends TestCase
             'action' => 'create',
             'json' => [
                 'status' => 'Removed',
-                'group_id' => ['early_careers_news_317'],
+                'group_id' => ['Early_Careers_Scientists_134'],
                 'contact_id' => '12345',
             ],
             'api_key' => 'api-key',
@@ -452,7 +452,7 @@ final class CiviCrmClientTest extends TestCase
             'json' => [
                 'status' => 'Added',
                 'group_id' => [
-                    'early_careers_news_317',
+                    'Early_Careers_Scientists_134',
                 ],
                 'contact_id' => '12345',
             ],
@@ -714,7 +714,7 @@ final class CiviCrmClientTest extends TestCase
                 ],
                 'group' => [
                     'All_Content_53',
-                    'early_careers_news_317',
+                    'Early_Careers_Scientists_134',
                     'eLife_bi_monthly_news_1032',
                 ],
                 'custom_139' => ['IS NULL' => 1],
