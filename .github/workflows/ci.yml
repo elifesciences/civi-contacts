@@ -38,7 +38,6 @@ jobs:
         uses: php-actions/composer@v6
         with:
           version: 1
-          memory_limit: -1
           php_version: ${{ matrix.php-versions }}
 
       - name: Run tests (standalone)
