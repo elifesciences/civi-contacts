@@ -11,6 +11,7 @@ use eLife\CiviContacts\Exception\HubspotResponseError;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -37,16 +38,11 @@ final class HubspotClient implements CiviCrmClientInterface
 
     private function storePreferencesUrl(int $contactId, string $preferencesUrl) : PromiseInterface
     {
-        return $this->client->sendAsync($this->prepareRequest('PATCH'), $this->options([
-            'query' => [
-                'entity' => 'Contact',
-                'action' => 'create',
-                'json' => [
-                    'contact_id' => $contactId,
-                    self::FIELD_PREFERENCES_URL => $preferencesUrl,
-                ],
-            ],
-        ]))->then(function (Response $response) {
+        return $this->client->sendAsync($this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $contactId), [
+            'body' => json_encode([
+                self::FIELD_PREFERENCES_URL => $preferencesUrl,
+            ]),
+        ])->then(function (Response $response) {
             return $this->prepareResponse($response);
         })->then(function ($data) {
             return ['contact_id' => $data['id']];
@@ -55,30 +51,11 @@ final class HubspotClient implements CiviCrmClientInterface
 
     public function optout(int $contactId, array $reasons = [], string $reasonOther = null) : PromiseInterface
     {
-        return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
-            'query' => [
-                'entity' => 'GroupContact',
-                'action' => 'create',
-                'json' => [
-                    'group_id' => [
-                    ],
-                    'contact_id' => $contactId,
-                ],
-            ],
-        ]))->then(function (Response $response) {
-            return $this->prepareResponse($response);
-        })->then(function () use ($contactId, $reasons, $reasonOther) {
-            return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
-                'query' => [
-                    'entity' => 'Contact',
-                    'action' => 'create',
-                    'json' => [
-                        'contact_id' => $contactId,
-                        'is_opt_out' => 1,
-                    ],
-                ],
-            ]));
-        })->then(function (Response $response) {
+        return $this->client->sendAsync($this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $contactId), [
+            'body' => json_encode([
+                self::FIELD_OUTPUT => 'true',
+            ]),
+        ])->then(function (Response $response) {
             return $this->prepareResponse($response);
         });
     }
@@ -249,42 +226,24 @@ final class HubspotClient implements CiviCrmClientInterface
                 });
         }
 
-        return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
-            'query' => [
-                'entity' => 'GroupContact',
-                'action' => 'create',
-                'json' => [
-                    'contact_id' => $contactId,
-                ],
-            ],
-        ]))->then(function (Response $response) {
-            return $this->prepareResponse($response);
-        })->then(function () use ($contactId) {
-            return [
-                'contact_id' => $contactId,
-            ];
-        });
+        // @todo - trigger email to contact with preferences URL.
+        $promise = new Promise();
+        $promise->resolve([
+            'contact_id' => $contactId,
+        ]);
+
+        return $promise;
     }
 
     public function triggerUnsubscribeEmail(int $contactId) : PromiseInterface
     {
-        return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
-            'query' => [
-                'entity' => 'GroupContact',
-                'action' => 'create',
-                'json' => [
-                    'group_id' => [
-                    ],
-                    'contact_id' => $contactId,
-                ],
-            ],
-        ]))->then(function (Response $response) {
-            return $this->prepareResponse($response);
-        })->then(function () use ($contactId) {
-            return [
-                'contact_id' => $contactId,
-            ];
-        });
+        // @todo - trigger email to contact with unsubscribe URL.
+        $promise = new Promise();
+        $promise->resolve([
+            'contact_id' => $contactId,
+        ]);
+
+        return $promise;
     }
 
     public function storeSubscriberUrls(Subscription $subscription) : PromiseInterface

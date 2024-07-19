@@ -65,7 +65,7 @@ final class HubspotClientTest extends TestCase
 
         /** @var Request $firstRequest */
         $firstRequest = $container[0]['request'];
-        $this->assertSame(json_encode([
+        $this->assertEquals(json_encode([
             'properties' => [
                 'email',
                 'firstname',
@@ -142,7 +142,7 @@ final class HubspotClientTest extends TestCase
 
         /** @var Request $firstRequest */
         $firstRequest = $container[0]['request'];
-        $this->assertSame([
+        $this->assertEquals([
             'properties' => [
                 'email',
                 'firstname',
@@ -383,9 +383,108 @@ final class HubspotClientTest extends TestCase
         /** @var Request $firstRequest */
         $firstRequest = $container[0]['request'];
         $this->assertEquals('PATCH', $firstRequest->getMethod());
-        $this->assertSame([
+        $this->assertEquals('/crm/v3/objects/contacts/12345', $firstRequest->getUri()->getPath());
+        $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
+        $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
+        $this->assertEquals([
             'community_news' => 'false',
         ], json_decode($firstRequest->getBody()->getContents(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_optout_an_existing_user()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode(['id' => '12345'])),
+        ], $container);
+
+        $client->optout(12345, [1,2,3,5], 'reason')->wait();
+
+        $this->assertCount(1, $container);
+
+        /** @var Request $firstRequest */
+        $firstRequest = $container[0]['request'];
+        $this->assertEquals('PATCH', $firstRequest->getMethod());
+        $this->assertEquals('/crm/v3/objects/contacts/12345', $firstRequest->getUri()->getPath());
+        $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
+        $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
+        $this->assertEquals([
+            'etoc___opt_out' => 'true',
+        ], json_decode($firstRequest->getBody()->getContents(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_trigger_preferences_email()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode(['is_error' => 0])),
+        ], $container);
+
+        $trigger = $client->triggerPreferencesEmail(12345);
+
+        $this->assertEquals([
+            'contact_id' => 12345,
+        ], $trigger->wait());
+
+        $this->assertCount(0, $container);
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_trigger_preferences_email_setting_preferences_url()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode(['id' => 12345])),
+        ], $container);
+
+        $trigger = $client->triggerPreferencesEmail(12345, 'http://localhost/content-alerts/new-preferences-url');
+
+        $this->assertEquals([
+            'contact_id' => 12345,
+        ], $trigger->wait());
+
+        $this->assertCount(1, $container);
+
+        /** @var Request $firstRequest */
+        $firstRequest = $container[0]['request'];
+        $this->assertEquals('PATCH', $firstRequest->getMethod());
+        $this->assertEquals('/crm/v3/objects/contacts/12345', $firstRequest->getUri()->getPath());
+        $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
+        $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
+        $this->assertEquals([
+            'etoc___preference_management_url' => 'http://localhost/content-alerts/new-preferences-url',
+        ], json_decode($firstRequest->getBody()->getContents(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_trigger_unsubscribe_confirmation_email()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode(['is_error' => 0])),
+        ], $container);
+
+        $trigger = $client->triggerPreferencesEmail(12345);
+
+        $this->assertEquals([
+            'contact_id' => 12345,
+        ], $trigger->wait());
+
+        $this->assertCount(0, $container);
     }
 
     private function prepareClient(array $queue = [], array &$container = []) : CiviCrmClientInterface
