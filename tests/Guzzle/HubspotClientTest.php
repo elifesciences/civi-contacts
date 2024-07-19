@@ -41,6 +41,7 @@ final class HubspotClientTest extends TestCase
                             'firstname' => '',
                             'lastname' => '',
                             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                            'etoc___opt_out' => 'false',
                         ],
                     ],
                 ],
@@ -73,6 +74,7 @@ final class HubspotClientTest extends TestCase
                 'elife_news',
                 'community_news',
                 'etoc___preference_management_url',
+                'etoc___opt_out',
             ],
             'filterGroups' => [
                 [
@@ -117,6 +119,7 @@ final class HubspotClientTest extends TestCase
                             'firstname' => '',
                             'lastname' => '',
                             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                            'etoc___opt_out' => null,
                         ],
                     ],
                 ],
@@ -148,6 +151,7 @@ final class HubspotClientTest extends TestCase
                 'elife_news',
                 'community_news',
                 'etoc___preference_management_url',
+                'etoc___opt_out',
             ],
             'filterGroups' => [
                 [
@@ -190,6 +194,7 @@ final class HubspotClientTest extends TestCase
                             'firstname' => '',
                             'lastname' => '',
                             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                            'etoc___opt_out' => 'false',
                         ],
                     ],
                 ],
@@ -226,6 +231,7 @@ final class HubspotClientTest extends TestCase
                 'elife_news',
                 'community_news',
                 'etoc___preference_management_url',
+                'etoc___opt_out',
             ],
             'filterGroups' => [
                 [
@@ -297,6 +303,7 @@ final class HubspotClientTest extends TestCase
             'lastname' => '',
             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
             'twice_weekly_research_updates' => 'true',
+            'etoc___opt_out' => 'false',
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -354,6 +361,7 @@ final class HubspotClientTest extends TestCase
             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
             'community_news' => 'true',
             'elife_news' => 'false',
+            'etoc___opt_out' => 'false',
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 

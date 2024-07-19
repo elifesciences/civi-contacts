@@ -23,6 +23,8 @@ final class HubspotClient implements CiviCrmClientInterface
     const FIELD_UNSUBSCRIBE_URL = 'etoc___unsubscribe_url';
     // Custom field to store opt-out link to be included in emails.
     const FIELD_OPTOUT_URL = 'etoc___opt_out_url';
+    // Custom field to store opt-out
+    const FIELD_OUTPUT = 'etoc___opt_out';
 
     private $client;
     private $apiKey;
@@ -122,7 +124,7 @@ final class HubspotClient implements CiviCrmClientInterface
             'firstname' => $firstName ?? '',
             'lastname' => $lastName ?? '',
             self::FIELD_PREFERENCES_URL => $preferencesUrl,
-            // Set opt_out field to false
+            self::FIELD_OUTPUT => 'false',
         ];
 
         foreach ($add as $a) {
@@ -190,6 +192,7 @@ final class HubspotClient implements CiviCrmClientInterface
                         'elife_news',
                         'community_news',
                         self::FIELD_PREFERENCES_URL,
+                        self::FIELD_OUTPUT,
                     ],
                     'filterGroups' => [
                         [
@@ -218,12 +221,12 @@ final class HubspotClient implements CiviCrmClientInterface
                 $contact = $results[0]['properties'];
                 return new Subscription(
                     (int) $contact['hs_object_id'],
-                    false, // Detect opt-out
+                    ('true' === $contact[self::FIELD_OUTPUT]),
                     $contact['email'],
                     $contact['firstname'],
                     $contact['lastname'],
                     array_filter(array_map(function ($group) use ($contact) {
-                        return !empty($contact[$group]) && $contact[$group] === 'true' ? $group : null;
+                        return !empty($contact[$group]) && 'true' === $contact[$group] ? $group : null;
                     }, [
                         LatestArticles::GROUP_ID,
                         ElifeNewsletter::GROUP_ID,
