@@ -401,7 +401,7 @@ final class CiviCrmClientTest extends TestCase
                 new EarlyCareer(),
             ],
             [
-                new LatestArticles('http://localhost/content-alerts/unsubscribe/foo'),
+                new LatestArticles(),
             ],
             'http://localhost/content-alerts/foo',
             null,

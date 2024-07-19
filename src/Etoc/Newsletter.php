@@ -19,7 +19,7 @@ abstract class Newsletter
         return static::GROUP;
     }
 
-    public function groupId() : int
+    public function groupId() : string
     {
         return static::GROUP_ID;
     }
