@@ -299,12 +299,14 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'email' => 'email@example.com',
-            'firstname' => '',
-            'lastname' => '',
-            'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
-            'twice_weekly_research_updates' => 'true',
-            'etoc___opt_out' => 'false',
+            'properties' => [
+                'email' => 'email@example.com',
+                'firstname' => '',
+                'lastname' => '',
+                'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                'twice_weekly_research_updates' => 'true',
+                'etoc___opt_out' => 'false',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -357,12 +359,14 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'firstname' => 'New',
-            'lastname' => 'Name',
-            'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
-            'community_news' => 'true',
-            'elife_news' => 'false',
-            'etoc___opt_out' => 'false',
+            'properties' => [
+                'firstname' => 'New',
+                'lastname' => 'Name',
+                'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                'community_news' => 'true',
+                'elife_news' => 'false',
+                'etoc___opt_out' => 'false',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -388,7 +392,9 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'community_news' => 'false',
+            'properties' => [
+                'community_news' => 'false',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -414,7 +420,9 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'etoc___opt_out' => 'true',
+            'properties' => [
+                'etoc___opt_out' => 'true',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -464,7 +472,9 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'etoc___preference_management_url' => 'http://localhost/content-alerts/new-preferences-url',
+            'properties' => [
+                'etoc___preference_management_url' => 'http://localhost/content-alerts/new-preferences-url',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 
@@ -530,9 +540,11 @@ final class HubspotClientTest extends TestCase
         $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
         $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
         $this->assertEquals([
-            'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
-            'etoc___unsubscribe_url' => 'http://localhost/content-alerts/unsubscribe/bar',
-            'etoc___opt_out_url' => 'http://localhost/content-alerts/optout/baz',
+            'properties' => [
+                'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                'etoc___unsubscribe_url' => 'http://localhost/content-alerts/unsubscribe/bar',
+                'etoc___opt_out_url' => 'http://localhost/content-alerts/optout/baz',
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 

@@ -40,7 +40,9 @@ final class HubspotClient implements CiviCrmClientInterface
     {
         return $this->client->sendAsync($this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $contactId), [
             'body' => json_encode([
-                self::FIELD_PREFERENCES_URL => $preferencesUrl,
+                'properties' => [
+                    self::FIELD_PREFERENCES_URL => $preferencesUrl,
+                ],
             ]),
         ])->then(function (Response $response) {
             return $this->prepareResponse($response);
@@ -53,7 +55,9 @@ final class HubspotClient implements CiviCrmClientInterface
     {
         return $this->client->sendAsync($this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $contactId), [
             'body' => json_encode([
-                self::FIELD_OUTPUT => 'true',
+                'properties' => [
+                    self::FIELD_OUTPUT => 'true',
+                ],
             ]),
         ])->then(function (Response $response) {
             return $this->prepareResponse($response);
@@ -62,14 +66,16 @@ final class HubspotClient implements CiviCrmClientInterface
 
     public function unsubscribe(int $contactId, array $groups) : PromiseInterface
     {
-        $body = [];
+        $properties = [];
 
         foreach ($groups as $group) {
-            $body[$group] = 'false';
+            $properties[$group] = 'false';
         }
 
         return $this->client->sendAsync($this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $contactId), [
-            'body' => json_encode($body),
+            'body' => json_encode([
+                'properties' => $properties,
+            ]),
         ])->then(function (Response $response) {
             return $this->prepareResponse($response);
         });
@@ -117,22 +123,24 @@ final class HubspotClient implements CiviCrmClientInterface
                 is_null($preferencesBefore) ? 'POST' : 'PATCH',
                 '/crm/v3/objects/contacts' . (!is_null($preferencesBefore) ? '/' . $identifier : '')
             ),
-            ['body' => json_encode($options +
-            (
-                is_null($preferencesBefore) ? [
-                    'email' => $identifier,
-                ] : []
-            ) +
-            (
-                $unsubscribeUrl ? [
-                    self::FIELD_UNSUBSCRIBE_URL => $unsubscribeUrl,
-                ] : []
-            ) +
-            (
-                $optoutUrl ? [
-                    self::FIELD_OPTOUT_URL => $optoutUrl,
-                ] : []
-            ))]
+            ['body' => json_encode([
+                'properties' => $options +
+                    (
+                        is_null($preferencesBefore) ? [
+                            'email' => $identifier,
+                        ] : []
+                    ) +
+                    (
+                        $unsubscribeUrl ? [
+                            self::FIELD_UNSUBSCRIBE_URL => $unsubscribeUrl,
+                        ] : []
+                    ) +
+                    (
+                        $optoutUrl ? [
+                            self::FIELD_OPTOUT_URL => $optoutUrl,
+                        ] : []
+                    )
+            ])]
         )->then(function (Response $response) use ($preferences, $preferencesBefore) {
             $data = $this->prepareResponse($response);
             $add = array_values(array_diff($preferences, $preferencesBefore ?? []));
@@ -253,9 +261,11 @@ final class HubspotClient implements CiviCrmClientInterface
             $this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $subscription->getId()),
             [
                 'body' => json_encode([
-                    self::FIELD_PREFERENCES_URL => $subscription->getPreferencesUrl(),
-                    self::FIELD_UNSUBSCRIBE_URL => $subscription->getUnsubscribeUrl(),
-                    self::FIELD_OPTOUT_URL => $subscription->getOptoutUrl(),
+                    'properties' => [
+                        self::FIELD_PREFERENCES_URL => $subscription->getPreferencesUrl(),
+                        self::FIELD_UNSUBSCRIBE_URL => $subscription->getUnsubscribeUrl(),
+                        self::FIELD_OPTOUT_URL => $subscription->getOptoutUrl(),
+                    ],
                 ]),
             ]
         )->then(function (Response $response) {
