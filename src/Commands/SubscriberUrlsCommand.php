@@ -4,7 +4,6 @@ namespace eLife\CiviContacts\Commands;
 
 use eLife\CiviContacts\Etoc\Subscription;
 use eLife\CiviContacts\Guzzle\CiviCrmClientInterface;
-use eLife\CiviContacts\Model\Subscriber;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 

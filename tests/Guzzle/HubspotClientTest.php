@@ -33,8 +33,8 @@ final class HubspotClientTest extends TestCase
                 'total' => 1,
                 'results' => [
                     [
+                        'id' => '12345',
                         'properties' => [
-                            'hs_object_id' => '12345',
                             'community_news' => null,
                             'elife_news' => null,
                             'twice_weekly_research_updates' => 'true',
@@ -111,8 +111,8 @@ final class HubspotClientTest extends TestCase
                 'total' => 1,
                 'results' => [
                     [
+                        'id' => '12345',
                         'properties' => [
-                            'hs_object_id' => '12345',
                             'community_news' => null,
                             'elife_news' => null,
                             'twice_weekly_research_updates' => 'true',
@@ -186,8 +186,8 @@ final class HubspotClientTest extends TestCase
                 'total' => 1,
                 'results' => [
                     [
+                        'id' => '12345',
                         'properties' => [
-                            'hs_object_id' => '12345',
                             'community_news' => 'false',
                             'elife_news' => null,
                             'twice_weekly_research_updates' => 'true',
@@ -533,6 +533,87 @@ final class HubspotClientTest extends TestCase
             'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
             'etoc___unsubscribe_url' => 'http://localhost/content-alerts/unsubscribe/bar',
             'etoc___opt_out_url' => 'http://localhost/content-alerts/optout/baz',
+        ], json_decode($firstRequest->getBody()->getContents(), true));
+    }
+
+    /**
+     * @test
+     */
+    public function it_will_get_all_subscribers()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode([
+                'total' => 4,
+                'results' => [
+                    [
+                        'id' => 1,
+                        'properties' => [
+                            'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+                            'etoc___unsubscribe_url' => '',
+                            'etoc___opt_out_url' => '',
+                        ],
+                    ],
+                    [
+                        'id' => 2,
+                        'properties' => [
+                            'etoc___preference_management_url' => '',
+                            'etoc___unsubscribe_url' => 'http://localhost/content-alerts/unsubscribe/bar',
+                            'etoc___opt_out_url' => '',
+                        ],
+                    ],
+                    [
+                        'id' => 3,
+                        'properties' => [
+                            'etoc___preference_management_url' => '',
+                            'etoc___unsubscribe_url' => '',
+                            'etoc___opt_out_url' => 'http://localhost/content-alerts/optout/baz',
+                        ],
+                    ],
+                    [
+                        'id' => 4,
+                        'properties' => [
+                            'etoc___preference_management_url' => '',
+                            'etoc___unsubscribe_url' => '',
+                            'etoc___opt_out_url' => '',
+                        ],
+                    ],
+                ],
+            ])),
+        ], $container);
+
+        $subscribers = $client->getAllSubscribers(13, 10, 1);
+
+        $this->assertEquals([
+            Subscription::urlsOnly(1, 'http://localhost/content-alerts/foo'),
+            Subscription::urlsOnly(2, '', 'http://localhost/content-alerts/unsubscribe/bar'),
+            Subscription::urlsOnly(3, '', '', 'http://localhost/content-alerts/optout/baz'),
+            Subscription::urlsOnly(4),
+        ], $subscribers);
+        $this->assertCount(1, $container);
+
+        /** @var Request $firstRequest */
+        $firstRequest = $container[0]['request'];
+        $this->assertEquals([
+            'limit' => 10,
+            'after' => 1,
+            'properties' => [
+                'etoc___preference_management_url',
+                'etoc___unsubscribe_url',
+                'etoc___opt_out_url',
+            ],
+            'filterGroups' => [
+                [
+                    'filters' => [
+                        [
+                            'propertyName' => 'etoc___opt_out',
+                            'value' => 'true',
+                            'operator' => 'NEQ',
+                        ],
+                    ],
+                ],
+            ],
         ], json_decode($firstRequest->getBody()->getContents(), true));
     }
 

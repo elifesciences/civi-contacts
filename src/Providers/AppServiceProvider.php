@@ -2,8 +2,8 @@
 
 namespace eLife\CiviContacts\Providers;
 
-use eLife\CiviContacts\Guzzle\CiviCrmClient;
 use eLife\CiviContacts\Guzzle\CiviCrmClientInterface;
+use eLife\CiviContacts\Guzzle\HubspotClient;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,10 +19,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             CiviCrmClientInterface::class,
             function () {
-                return new CiviCrmClient(
-                    new Client(config('civiclient')),
-                    env('CIVI_API_KEY'),
-                    env('CIVI_SITE_KEY')
+                return new HubspotClient(
+                    new Client(config('hubspotclient')),
+                    env('HUBSPOT_API_KEY')
                 );
             }
         );

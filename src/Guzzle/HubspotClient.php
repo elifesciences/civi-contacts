@@ -195,21 +195,22 @@ final class HubspotClient implements CiviCrmClientInterface
             return $this->prepareResponse($response);
         })->then(function ($data) {
             if ($results = $data['results']) {
-                $contact = $results[0]['properties'];
+                $contact = $results[0];
+                $properties = $contact['properties'];
                 return new Subscription(
-                    (int) $contact['hs_object_id'],
-                    ('true' === $contact[self::FIELD_OUTPUT]),
-                    $contact['email'],
-                    $contact['firstname'],
-                    $contact['lastname'],
-                    array_filter(array_map(function ($group) use ($contact) {
-                        return !empty($contact[$group]) && 'true' === $contact[$group] ? $group : null;
+                    (int) $contact['id'],
+                    ('true' === $properties[self::FIELD_OUTPUT]),
+                    $properties['email'],
+                    $properties['firstname'],
+                    $properties['lastname'],
+                    array_filter(array_map(function ($group) use ($properties) {
+                        return !empty($properties[$group]) && 'true' === $properties[$group] ? $group : null;
                     }, [
                         LatestArticles::GROUP_ID,
                         ElifeNewsletter::GROUP_ID,
                         EarlyCareer::GROUP_ID,
                     ])),
-                    $contact[self::FIELD_PREFERENCES_URL]
+                    $properties[self::FIELD_PREFERENCES_URL]
                 );
             }
 
@@ -288,41 +289,42 @@ final class HubspotClient implements CiviCrmClientInterface
 
     private function getSubscribers($limit = 100, $offset = 0) : PromiseInterface
     {
-        return $this->client->sendAsync($this->prepareRequest('GET'), $this->options([
-            'query' => [
-                'entity' => 'Contact',
-                'action' => 'get',
-                'json' => [
-                    'return' => [
-                        'id',
+        return $this->client->sendAsync(
+            $this->prepareRequest('POST', '/crm/v3/objects/contacts/search'),
+            [
+                'body' => json_encode([
+                    'limit' => $limit,
+                    'after' => $offset,
+                    'properties' => [
                         self::FIELD_PREFERENCES_URL,
                         self::FIELD_UNSUBSCRIBE_URL,
                         self::FIELD_OPTOUT_URL,
                     ],
-                    'group' => [
-                        LatestArticles::GROUP,
-                        EarlyCareer::GROUP,
-                        ElifeNewsletter::GROUP,
+                    'filterGroups' => [
+                        [
+                            'filters' => [
+                                [
+                                    'propertyName' => self::FIELD_OUTPUT,
+                                    'value' => 'true',
+                                    'operator' => 'NEQ',
+                                ],
+                            ],
+                        ],
                     ],
-                    self::FIELD_OPTOUT_URL => ['IS NULL' => 1],
-                    'is_opt_out' => 0,
-                    'options' => [
-                        'limit' => $limit,
-                        'offset' => $offset,
-                    ],
-                ],
-            ],
-        ]))->then(function (Response $response) {
+                ]),
+            ]
+        )->then(function (Response $response) {
             return $this->prepareResponse($response);
         })->then(function (array $response) {
             return array_map(function ($contact) {
+                $properties = $contact['properties'];
                 return Subscription::urlsOnly(
                     (int) $contact['id'],
-                    $contact[self::FIELD_PREFERENCES_URL],
-                    $contact[self::FIELD_UNSUBSCRIBE_URL],
-                    $contact[self::FIELD_OPTOUT_URL]
+                    $properties[self::FIELD_PREFERENCES_URL],
+                    $properties[self::FIELD_UNSUBSCRIBE_URL],
+                    $properties[self::FIELD_OPTOUT_URL]
                 );
-            }, $response['values']) ?? [];
+            }, $response['results']) ?? [];
         });
     }
 
@@ -336,15 +338,6 @@ final class HubspotClient implements CiviCrmClientInterface
                 'Authorization' => 'Bearer ' . $this->apiKey
             ] + $headers
         );
-    }
-
-    private function options(array $options = []) : array
-    {
-        $options['query'] = array_map(function ($param) {
-            return is_array($param) ? json_encode($param) : $param;
-        }, array_merge($options['query'] ?? [], array_filter(['api_key' => $this->apiKey])));
-
-        return $options;
     }
 
     /**
