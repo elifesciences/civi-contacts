@@ -491,6 +491,54 @@ final class HubspotClientTest extends TestCase
     /**
      * @test
      */
+    public function it_will_store_subscriber_urls()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode([
+                'id' => '1',
+            ])),
+        ], $container);
+
+        $store = $client->storeSubscriberUrls(
+            Subscription::urlsOnly(
+                1,
+                'http://localhost/content-alerts/foo',
+                'http://localhost/content-alerts/unsubscribe/bar',
+                'http://localhost/content-alerts/optout/baz'
+            )
+        );
+
+        $this->assertEquals(
+            Subscription::urlsOnly(
+                1,
+
+                'http://localhost/content-alerts/foo',
+                'http://localhost/content-alerts/unsubscribe/bar',
+                'http://localhost/content-alerts/optout/baz'
+            ),
+            $store->wait()
+        );
+
+        $this->assertCount(1, $container);
+
+        /** @var Request $firstRequest */
+        $firstRequest = $container[0]['request'];
+        $this->assertEquals('PATCH', $firstRequest->getMethod());
+        $this->assertEquals('/crm/v3/objects/contacts/1', $firstRequest->getUri()->getPath());
+        $this->assertEquals(['application/json'], $firstRequest->getHeaders()['Content-Type']);
+        $this->assertEquals(['Bearer api-key'], $firstRequest->getHeaders()['Authorization']);
+        $this->assertEquals([
+            'etoc___preference_management_url' => 'http://localhost/content-alerts/foo',
+            'etoc___unsubscribe_url' => 'http://localhost/content-alerts/unsubscribe/bar',
+            'etoc___opt_out_url' => 'http://localhost/content-alerts/optout/baz',
+        ], json_decode($firstRequest->getBody()->getContents(), true));
+    }
+
+    /**
+     * @test
+     */
     public function it_can_handle_errors()
     {
         $container = [];

@@ -248,18 +248,16 @@ final class HubspotClient implements CiviCrmClientInterface
 
     public function storeSubscriberUrls(Subscription $subscription) : PromiseInterface
     {
-        return $this->client->sendAsync($this->prepareRequest('POST'), $this->options([
-            'query' => [
-                'entity' => 'Contact',
-                'action' => 'create',
-                'json' => [
-                    'contact_id' => $subscription->getId(),
+        return $this->client->sendAsync(
+            $this->prepareRequest('PATCH', '/crm/v3/objects/contacts/' . $subscription->getId()),
+            [
+                'body' => json_encode([
                     self::FIELD_PREFERENCES_URL => $subscription->getPreferencesUrl(),
                     self::FIELD_UNSUBSCRIBE_URL => $subscription->getUnsubscribeUrl(),
                     self::FIELD_OPTOUT_URL => $subscription->getOptoutUrl(),
-                ],
-            ],
-        ]))->then(function (Response $response) {
+                ]),
+            ]
+        )->then(function (Response $response) {
             return $this->prepareResponse($response);
         })->then(function (array $data) use ($subscription) {
             return Subscription::urlsOnly(
