@@ -7,6 +7,7 @@ use eLife\CiviContacts\Etoc\ElifeNewsletter;
 use eLife\CiviContacts\Etoc\LatestArticles;
 use eLife\CiviContacts\Etoc\Newsletter;
 use eLife\CiviContacts\Etoc\Subscription;
+use eLife\CiviContacts\Exception\HubspotResponseError;
 use eLife\CiviContacts\Guzzle\CiviCrmClientInterface;
 use eLife\CiviContacts\Guzzle\HubspotClient;
 use GuzzleHttp\Client;
@@ -485,6 +486,26 @@ final class HubspotClientTest extends TestCase
         ], $trigger->wait());
 
         $this->assertCount(0, $container);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_handle_errors()
+    {
+        $container = [];
+
+        $client = $this->prepareClient([
+            new Response(200, [], json_encode([
+                'status' => 'error',
+                'error_message' => 'Hubspot is broken!',
+            ])),
+        ], $container);
+
+        $this->expectException(HubspotResponseError::class);
+        $this->expectExceptionMessage('Hubspot is broken!');
+
+        $client->triggerPreferencesEmail(12345, 'http://preferences')->wait();
     }
 
     private function prepareClient(array $queue = [], array &$container = []) : CiviCrmClientInterface

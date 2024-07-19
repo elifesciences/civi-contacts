@@ -358,7 +358,7 @@ final class HubspotClient implements CiviCrmClientInterface
     {
         $body = json_decode($response->getBody()->getContents(), true);
 
-        if (!empty($body['is_error'])) {
+        if (!empty($body['status']) && $body['status'] === 'error') {
             throw new HubspotResponseError($body['error_message'], $response);
         }
 
